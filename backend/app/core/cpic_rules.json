@@ -1,0 +1,106 @@
+{
+  "CYP2D6": {
+    "Poor Metabolizer": {
+      "CODEINE": {
+        "risk": "Ineffective",
+        "recommendation": "Avoid codeine due to lack of efficacy. Consider alternative analgesics (e.g., morphine, non-opioids)."
+      },
+      "TRAMADOL": {
+        "risk": "Ineffective",
+        "recommendation": "Avoid tramadol due to lack of efficacy. Consider alternative analgesics."
+      }
+    },
+    "Intermediate Metabolizer": {
+      "CODEINE": {
+        "risk": "Adjust Dosage",
+        "recommendation": "Use label recommended age-specific dosing. If no response, consider alternative."
+      }
+    },
+    "Ultrarapid Metabolizer": {
+      "CODEINE": {
+        "risk": "Toxic",
+        "recommendation": "Avoid codeine due to potential for toxicity (life-threatening respiratory depression)."
+      }
+    }
+  },
+  "CYP2C19": {
+    "Poor Metabolizer": {
+      "CLOPIDOGREL": {
+        "risk": "Ineffective",
+        "recommendation": "Avoid clopidogrel. Consider alternative antiplatelet therapy (e.g., prasugrel, ticagrelor)."
+      }
+    },
+    "Intermediate Metabolizer": {
+      "CLOPIDOGREL": {
+        "risk": "Adjust Dosage",
+        "recommendation": "Consider alternative antiplatelet therapy (e.g., prasugrel, ticagrelor)."
+      }
+    },
+    "Ultrarapid Metabolizer": {
+      "CLOPIDOGREL": {
+        "risk": "Safe",
+        "recommendation": "Standard dosing."
+      }
+    }
+  },
+  "CYP2C9": {
+    "Poor Metabolizer": {
+      "WARFARIN": {
+        "risk": "Toxic",
+        "recommendation": "Lower initial dose required. Calculate dose based on genotype or use alternative anticoagulant."
+      }
+    },
+    "Intermediate Metabolizer": {
+      "WARFARIN": {
+        "risk": "Adjust Dosage",
+        "recommendation": "Lower initial dose required."
+      }
+    }
+  },
+  "SLCO1B1": {
+    "Poor Function": {
+      "SIMVASTATIN": {
+        "risk": "Toxic",
+        "recommendation": "Prescribe a lower dose or consider an alternative statin (e.g., rosuvastatin) to reduce myopathy risk."
+      }
+    },
+    "Decreased Function": {
+      "SIMVASTATIN": {
+        "risk": "Adjust Dosage",
+        "recommendation": "Prescribe a lower dose (max 20mg daily) or consider an alternative statin."
+      }
+    }
+  },
+  "TPMT": {
+    "Poor Metabolizer": {
+      "AZATHIOPRINE": {
+        "risk": "Toxic",
+        "recommendation": "Drastically reduce dose (start at 10% of normal) or choose alternative agent. Monitoring required."
+      }
+    },
+    "Intermediate Metabolizer": {
+      "AZATHIOPRINE": {
+        "risk": "Adjust Dosage",
+        "recommendation": "Start with reduced dose (30-70% of normal). Adjust based on myelosuppression."
+      }
+    }
+  },
+  "DPYD": {
+    "Poor Metabolizer": {
+      "FLUOROURACIL": {
+        "risk": "Toxic",
+        "recommendation": "Avoid 5-FU. Use alternative drug."
+      },
+      "CAPECITABINE": {
+        "risk": "Toxic",
+        "recommendation": "Avoid capecitabine. Use alternative drug."
+      }
+    },
+    "Intermediate Metabolizer": {
+      "FLUOROURACIL": {
+        "risk": "Adjust Dosage",
+        "recommendation": "Reduce starting dose by 50%. Titrate based on toxicity."
+      }
+    }
+  }
+}
