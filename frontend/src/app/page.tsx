@@ -53,7 +53,7 @@ export default function Home() {
               transition={{ delay: 0.2 }}
               className="flex flex-wrap gap-4"
             >
-              <Link href="/upload">
+              <Link href="/risk-analysis">
                 <button className="px-6 py-3 bg-[#10b981] text-white font-semibold rounded-md shadow-lg hover:bg-[#059669] transition flex items-center gap-2">
                   Analyze VCF File
                 </button>
