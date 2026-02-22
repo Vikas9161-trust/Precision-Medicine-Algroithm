@@ -158,11 +158,17 @@ from app.models.clinical_models import ClinicalRecord
 @app.post("/patient/clinical", response_model=ClinicalRecord)
 def save_clinical_data(record: ClinicalRecord, session: Session = Depends(get_session)):
     try:
+        print(f"📥 Received Clinical Data for Patient: {record.patient_id}")
+        print(f"   LFT: {record.lft}")
+        print(f"   KFT: {record.kft}")
         session.add(record)
         session.commit()
         session.refresh(record)
+        print(f"✅ Saved Record ID: {record.id}")
         return record
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/patient/clinical/{patient_id}", response_model=List[ClinicalRecord])

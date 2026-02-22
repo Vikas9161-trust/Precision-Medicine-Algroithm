@@ -26,21 +26,27 @@ export function VcfUpload({ onAnalysisStart, isLoading }: VcfUploadProps) {
     const [drug, setDrug] = React.useState<string>(DRUGS[0])
     const [error, setError] = React.useState<string | null>(null)
 
+    const validateFile = (selectedFile: File): boolean => {
+        if (!selectedFile.name.endsWith(".vcf")) {
+            setError("Please upload a valid .vcf file")
+            setFile(null)
+            return false
+        }
+        if (selectedFile.size > 100 * 1024 * 1024) {
+            setError("File size exceeds 100MB")
+            setFile(null)
+            return false
+        }
+        setError(null)
+        return true
+    }
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const selectedFile = e.target.files[0]
-            if (!selectedFile.name.endsWith(".vcf")) {
-                setError("Please upload a valid .vcf file")
-                setFile(null)
-                return
+            if (validateFile(selectedFile)) {
+                setFile(selectedFile)
             }
-            if (selectedFile.size > 5 * 1024 * 1024) {
-                setError("File size exceeds 5MB")
-                setFile(null)
-                return
-            }
-            setFile(selectedFile)
-            setError(null)
         }
     }
 
@@ -49,14 +55,9 @@ export function VcfUpload({ onAnalysisStart, isLoading }: VcfUploadProps) {
         e.stopPropagation()
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             const selectedFile = e.dataTransfer.files[0]
-            // Same validation logic
-            if (!selectedFile.name.endsWith(".vcf")) {
-                setError("Please upload a valid .vcf file")
-                setFile(null)
-                return
+            if (validateFile(selectedFile)) {
+                setFile(selectedFile)
             }
-            setFile(selectedFile)
-            setError(null)
         }
     }
 

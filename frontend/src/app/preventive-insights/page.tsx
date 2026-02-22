@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '@/services/api';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +10,9 @@ import { Brain, ShieldCheck, Activity, AlertTriangle, FileText, Upload, Loader2,
 
 export default function PreventiveInsights() {
     const [profile, setProfile] = useState<any[]>([]);
+    const [clinicalData, setClinicalData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
+    const [loadingClinical, setLoadingClinical] = useState(false);
 
     // Derived stats
     const highRiskCount = profile.filter(g => g.phenotype.includes('Poor') || g.phenotype.includes('Ultrarapid')).length;
@@ -32,6 +34,28 @@ export default function PreventiveInsights() {
             setLoading(false);
         }
     };
+
+    const fetchClinicalData = async () => {
+        setLoadingClinical(true);
+        try {
+            const data = await api.getClinicalData('demo-patient-001');
+            if (data && data.length > 0) {
+                // Sort by timestamp desc to ensure we get the latest
+                const sorted = [...data].sort((a, b) =>
+                    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                );
+                setClinicalData(sorted[0]);
+            }
+        } catch (e) {
+            console.error("Failed to fetch clinical data", e);
+        } finally {
+            setLoadingClinical(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchClinicalData();
+    }, []);
 
     return (
         <div className="min-h-screen bg-[#0a0a0a] p-4 md:p-8 font-sans">
@@ -211,7 +235,10 @@ export default function PreventiveInsights() {
                 {/* Mental Health & Behavioral Section */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
                     <div className="md:col-span-1">
-                        <MentalHealthForm onSave={() => window.location.reload()} />
+                        <MentalHealthForm
+                            onSave={fetchClinicalData}
+                            initialData={clinicalData}
+                        />
                     </div>
 
                     <div className="md:col-span-2">
@@ -232,41 +259,63 @@ export default function PreventiveInsights() {
                                         <div className="flex items-center gap-4">
                                             <div className="bg-gray-800 p-3 rounded text-center min-w-[100px]">
                                                 <div className="text-xs text-gray-400">Genotype</div>
-                                                <div className="font-mono text-white text-lg">CYP2C19</div>
-                                                <div className="text-xs text-yellow-500 font-bold">*1/*2 (IM)</div>
+                                                <div className="font-mono text-white text-lg">
+                                                    {profile.find(p => p.gene === 'CYP2C19')?.gene || 'CYP2C19'}
+                                                </div>
+                                                <div className="text-xs text-yellow-500 font-bold">
+                                                    {profile.find(p => p.gene === 'CYP2C19')?.diplotype || '*1/*1 (Normal)'}
+                                                </div>
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-sm text-gray-300">
-                                                    Intermediate Metabolizer status suggests <span className="text-yellow-400 font-medium">slower clearance</span> of Sertraline/Escitalopram.
+                                                    {profile.find(p => p.gene === 'CYP2C19')?.phenotype.includes('Intermediate') ? (
+                                                        <>Intermediate Metabolizer status suggests <span className="text-yellow-400 font-medium">slower clearance</span> of Sertraline/Escitalopram.</>
+                                                    ) : profile.find(p => p.gene === 'CYP2C19')?.phenotype.includes('Rapid') ? (
+                                                        <>Rapid Metabolizer status suggests <span className="text-purple-400 font-medium">increased clearance</span> of Sertraline/Escitalopram.</>
+                                                    ) : (
+                                                        <>Standard metabolic profile for most common SSRIs.</>
+                                                    )}
                                                 </p>
                                                 <p className="text-sm text-gray-400 mt-1">
-                                                    If PHQ-9 score is high ({'>'}10), consider starting at 50% standard dose to avoid side effects.
+                                                    {clinicalData?.phq9_score > 10 ? (
+                                                        <span className="text-red-400 font-medium">Moderate-to-Severe Depression (PHQ-9: {clinicalData.phq9_score}) - Follow-up required.</span>
+                                                    ) : clinicalData?.phq9_score > 0 ? (
+                                                        <span className="text-yellow-400">Mild PHQ-9 score ({clinicalData.phq9_score}). Periodic monitoring recommended.</span>
+                                                    ) : (
+                                                        <>If PHQ-9 score is high (&gt;10), consider starting at 50% standard dose.</>
+                                                    )}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                                            <h5 className="text-sm font-medium text-gray-300 mb-1">Anxiety Risk (GAD-7)</h5>
-                                            <div className="flex items-end gap-2">
-                                                <span className="text-2xl font-bold text-white">Pending</span>
-                                                <span className="text-xs text-gray-500 mb-1">/ 21</span>
-                                            </div>
-                                            <div className="w-full bg-gray-700 h-1.5 rounded-full mt-2">
-                                                <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: '0%' }}></div>
-                                            </div>
+                                    <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                                        <h5 className="text-sm font-medium text-gray-300 mb-1 flex justify-between">
+                                            <span>Anxiety Risk (GAD-7)</span>
+                                            {loadingClinical && <Loader2 className="h-3 w-3 animate-spin text-blue-400" />}
+                                        </h5>
+                                        <div className="flex items-end gap-2">
+                                            <span className="text-2xl font-bold text-white">
+                                                {clinicalData?.gad7_score ?? 'Pending'}
+                                            </span>
+                                            <span className="text-xs text-gray-500 mb-1">/ 21</span>
                                         </div>
+                                        <div className="w-full bg-gray-700 h-1.5 rounded-full mt-2">
+                                            <div
+                                                className={`h-1.5 rounded-full transition-all duration-500 ${clinicalData?.gad7_score > 10 ? 'bg-red-500' : 'bg-blue-500'}`}
+                                                style={{ width: `${(clinicalData?.gad7_score / 21) * 100 || 0}%` }}
+                                            ></div>
+                                        </div>
+                                    </div>
 
-                                        <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                                            <h5 className="text-sm font-medium text-gray-300 mb-1">Stress & Cortisol Response</h5>
-                                            <div className="flex items-center gap-2 mt-2">
-                                                <Badge variant="outline" className="border-orange-500 text-orange-400">FKBP5 Variant Detected</Badge>
-                                            </div>
-                                            <p className="text-xs text-gray-400 mt-2">
-                                                Carriers may have prolonged stress response. Mindfulness interventions recommended.
-                                            </p>
+                                    <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                                        <h5 className="text-sm font-medium text-gray-300 mb-1">Stress & Cortisol Response</h5>
+                                        <div className="flex items-center gap-2 mt-2">
+                                            <Badge variant="outline" className="border-orange-500 text-orange-400">FKBP5 Variant Detected</Badge>
                                         </div>
+                                        <p className="text-xs text-gray-400 mt-2">
+                                            Carriers may have prolonged stress response. Mindfulness interventions recommended.
+                                        </p>
                                     </div>
                                 </div>
                             </CardContent>
@@ -363,6 +412,6 @@ export default function PreventiveInsights() {
                     </Card>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

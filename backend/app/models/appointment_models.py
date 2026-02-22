@@ -13,5 +13,6 @@ class Appointment(SQLModel, table=True):
     appointment_date: str
     appointment_time: str
     consultation_type: str  # "Online" or "In-person"
+    notes: Optional[str] = None
     status: str = "Confirmed"
     created_at: datetime = Field(default_factory=datetime.utcnow)

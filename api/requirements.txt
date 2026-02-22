@@ -1,10 +1,10 @@
-fastapi
+sqlmodel
+google-generativeai
+python-dotenv
+pydantic-settings
 uvicorn
-pydantic
+fastapi
 python-multipart
 requests
 pytest
 httpx
-sqlmodel
-google-generativeai
-python-dotenv

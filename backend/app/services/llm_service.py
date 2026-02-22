@@ -16,8 +16,11 @@ class LLMService:
         if self.api_key:
             try:
                 genai.configure(api_key=self.api_key)
-                self.model = genai.GenerativeModel('gemini-pro')
-                logger.info("LLMService initialized with Gemini Pro")
+                # Using full model name from list_models
+                self.model_name = 'models/gemini-2.0-flash'
+                self.model = genai.GenerativeModel(self.model_name)
+                print(f"🚀 LLMService initialized with model: {self.model_name}")
+                logger.info(f"LLMService initialized with {self.model_name}")
             except Exception as e:
                 logger.error(f"Failed to initialize Gemini: {e}")
         else:
@@ -31,6 +34,8 @@ class LLMService:
             try:
                 return self._generate_ai_explanation(drug, gene, phenotype, risk, recommendation)
             except Exception as e:
+                import traceback
+                traceback.print_exc()
                 logger.error(f"Error calling LLM: {e}. Falling back to template.")
                 
         return self._generate_template_explanation(drug, gene, phenotype, risk, recommendation)
@@ -114,9 +119,15 @@ class LLMService:
             try:
                 # Construct System Prompt with Context
                 system_prompt = """
-                You are PharmaGuard AI, an expert clinical pharmacogenomics assistant.
-                Answer the following query from a user (clinician or patient) accurately and concisely.
-                If the query is not related to pharmacogenomics, drugs, or genetics, politely decline.
+                You are PharmaGuard AI, an elite clinical pharmacogenomics assistant. 
+                Your goal is to provide high-precision, evidence-based genomic insights.
+                
+                Guidelines for your responses:
+                1. Reference CPIC (Clinical Pharmacogenetics Implementation Consortium) and DPWG (Dutch Pharmacogenetics Working Group) standards.
+                2. Explain the relationship between genotypes, phenotypes (e.g., Poor Metabolizer), and clinical outcomes.
+                3. Be professional, clinical, and cautious. Always remind users to consult with a MD for actual medical decisions.
+                4. If context is provided, prioritize it. Use the patient's specific LFT (Liver Function Tests), KFT (Kidney Function Tests), and clinical scores (GAD-7, PHQ-9) to tailor your advice.
+                5. If a query is unrelated to healthcare, medicine, or genomics, politely decline.
                 """
 
                 if context:
@@ -128,7 +139,12 @@ class LLMService:
                 response = self.model.generate_content(prompt)
                 return response.text.strip()
             except Exception as e:
+                import traceback
+                traceback.print_exc()
+                error_msg = str(e)
+                if "429" in error_msg:
+                    return "I'm sorry, because this is a free-tier API key, the quota for today has been reached. Please try again later or check your Google Gemini quota settings."
                 logger.error(f"Error calling LLM for chat: {e}")
-                return "I'm currently unable to process your request. Please try again later."
+                return "PharmaGuard AI service is temporarily overloaded. Please try again in a few moments."
         else:
-            return "AI service is currently unavailable. Please check configuration."
+            return "AI service is currently unavailable. Please check your GEMINI_API_KEY configuration."

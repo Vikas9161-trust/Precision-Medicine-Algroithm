@@ -17,6 +17,8 @@ export default function ClinicalAction() {
 
     const [alerts, setAlerts] = useState<string[]>([]);
     const [simulating, setSimulating] = useState(false);
+    const [ordering, setOrdering] = useState(false);
+    const [ordered, setOrdered] = useState(false);
 
     const simulateRiskEscalation = () => {
         setSimulating(true);
@@ -39,6 +41,15 @@ export default function ClinicalAction() {
 
     const addAlert = (msg: string) => {
         setAlerts(prev => [msg, ...prev]);
+    };
+
+    const handleOrderPanel = () => {
+        setOrdering(true);
+        setTimeout(() => {
+            setOrdering(false);
+            setOrdered(true);
+            addAlert("📦 Clinical Order Placed: Genomic Panel (SLCO1B1) sent to Diagnostic Lab.");
+        }, 1500);
     };
 
     return (
@@ -140,7 +151,14 @@ export default function ClinicalAction() {
                                 <div>
                                     <h4 className="font-bold text-gray-200">Missing Core Genes</h4>
                                     <p className="text-sm text-gray-400 mt-1 leading-relaxed">SLCO1B1 status is unknown. Recommended before starting statin therapy.</p>
-                                    <button className="mt-3 text-xs bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded transition-colors font-medium">Order Panel</button>
+                                    <button
+                                        onClick={handleOrderPanel}
+                                        disabled={ordering || ordered}
+                                        className={`mt-3 text-xs px-4 py-1.5 rounded transition-all font-medium flex items-center gap-2 ${ordered ? 'bg-green-600 text-white cursor-default' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-900/20'}`}
+                                    >
+                                        {ordering ? <Activity className="h-3 w-3 animate-spin" /> : ordered ? <CheckCircle2 className="h-3 w-3" /> : null}
+                                        {ordered ? 'Panel Ordered' : ordering ? 'Processing...' : 'Order Panel'}
+                                    </button>
                                 </div>
                             </div>
 

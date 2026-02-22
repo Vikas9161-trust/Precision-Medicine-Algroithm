@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { api } from "@/services/api";
 import { Loader2, Save, Activity } from "lucide-react";
 
-export function LabInputForm({ onSave }: { onSave: () => void }) {
+export function LabInputForm({ onSave, initialData }: { onSave: () => void, initialData?: any }) {
     const [loading, setLoading] = useState(false);
 
     // Lab Values State
@@ -14,6 +14,36 @@ export function LabInputForm({ onSave }: { onSave: () => void }) {
     const [kft, setKft] = useState({ creatinine: "", egfr: "", bun: "" });
     const [hba1c, setHba1c] = useState("");
     const [lipids, setLipids] = useState({ cholesterol: "", ldl: "", hdl: "", triglycerides: "" });
+    const [mentalHealth, setMentalHealth] = useState({ gad7: "", phq9: "", stress: "" });
+
+    // Pre-fill form if initialData is provided
+    useEffect(() => {
+        if (initialData) {
+            setLft({
+                alt: initialData.lft?.alt?.toString() || "",
+                ast: initialData.lft?.ast?.toString() || "",
+                alp: initialData.lft?.alp?.toString() || "",
+                bilirubin: initialData.lft?.bilirubin?.toString() || ""
+            });
+            setKft({
+                creatinine: initialData.kft?.creatinine?.toString() || "",
+                egfr: initialData.kft?.egfr?.toString() || "",
+                bun: initialData.kft?.bun?.toString() || ""
+            });
+            setHba1c(initialData.hba1c?.toString() || "");
+            setLipids({
+                cholesterol: initialData.lipid_profile?.cholesterol?.toString() || "",
+                ldl: initialData.lipid_profile?.ldl?.toString() || "",
+                hdl: initialData.lipid_profile?.hdl?.toString() || "",
+                triglycerides: initialData.lipid_profile?.triglycerides?.toString() || ""
+            });
+            setMentalHealth({
+                gad7: initialData.gad7_score?.toString() || "",
+                phq9: initialData.phq9_score?.toString() || "",
+                stress: initialData.stress_level?.toString() || ""
+            });
+        }
+    }, [initialData]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,7 +68,10 @@ export function LabInputForm({ onSave }: { onSave: () => void }) {
                 ldl: parseFloat(lipids.ldl) || 0,
                 hdl: parseFloat(lipids.hdl) || 0,
                 triglycerides: parseFloat(lipids.triglycerides) || 0
-            }
+            },
+            gad7_score: parseInt(mentalHealth.gad7) || 0,
+            phq9_score: parseInt(mentalHealth.phq9) || 0,
+            stress_level: parseInt(mentalHealth.stress) || 0
         };
 
         try {
@@ -94,6 +127,16 @@ export function LabInputForm({ onSave }: { onSave: () => void }) {
                             <InputGroup label="LDL" value={lipids.ldl} onChange={v => setLipids({ ...lipids, ldl: v })} />
                             <InputGroup label="HDL" value={lipids.hdl} onChange={v => setLipids({ ...lipids, hdl: v })} />
                             <InputGroup label="Triglycerides" value={lipids.triglycerides} onChange={v => setLipids({ ...lipids, triglycerides: v })} />
+                        </div>
+                    </div>
+
+                    {/* Mental Health Assessment */}
+                    <div className="space-y-3">
+                        <h4 className="text-sm font-semibold text-purple-400 uppercase tracking-wider">Mental Health / Behavioral</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <InputGroup label="GAD-7 Score" value={mentalHealth.gad7} onChange={v => setMentalHealth({ ...mentalHealth, gad7: v })} />
+                            <InputGroup label="PHQ-9 Score" value={mentalHealth.phq9} onChange={v => setMentalHealth({ ...mentalHealth, phq9: v })} />
+                            <InputGroup label="Stress (1-10)" value={mentalHealth.stress} onChange={v => setMentalHealth({ ...mentalHealth, stress: v })} />
                         </div>
                     </div>
 

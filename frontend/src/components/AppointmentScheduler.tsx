@@ -62,6 +62,7 @@ export function AppointmentScheduler({ initialDrug = "", initialRisk = "" }: App
                 appointment_date: date.toISOString().split('T')[0],
                 appointment_time: timeSlot,
                 consultation_type: visitType === "video" ? "Online" : "In-person",
+                notes: notes,
                 status: "Confirmed"
             });
             console.log("Booking success:", result);

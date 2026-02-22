@@ -3,6 +3,8 @@
 import { LabInputForm } from '@/components/LabInputForm';
 import { useEffect, useState } from 'react';
 import { api } from '@/services/api';
+import { Loader2, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function PatientDataHub() {
     // State to store list of gene profiles
@@ -22,7 +24,11 @@ export default function PatientDataHub() {
         try {
             const data = await api.getClinicalData('demo-patient-001');
             if (data && data.length > 0) {
-                setClinicalData(data[0]); // Get latest
+                // Sort by timestamp desc to ensure latest
+                const sorted = [...data].sort((a, b) =>
+                    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                );
+                setClinicalData(sorted[0]);
             }
         } catch (e) {
             console.error("Failed to fetch clinical data", e);
@@ -73,7 +79,7 @@ export default function PatientDataHub() {
 
             {/* Lab Input Section */}
             <div className="mb-8">
-                <LabInputForm onSave={fetchClinicalData} />
+                <LabInputForm onSave={fetchClinicalData} initialData={clinicalData} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -161,16 +167,48 @@ export default function PatientDataHub() {
                         </div>
 
                         <div className="bg-green-900/10 p-4 rounded-lg border border-green-900/20">
-                            <h3 className="font-medium text-green-400">Laboratory Data (Latest)</h3>
+                            <h3 className="font-medium text-green-400 flex justify-between items-center">
+                                <span>Laboratory Data (Latest)</span>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={fetchClinicalData}
+                                        disabled={loadingClinical}
+                                        className="p-1 hover:bg-green-900/30 rounded-full transition-colors"
+                                        title="Refresh Data"
+                                    >
+                                        <RefreshCw className={`h-4 w-4 ${loadingClinical ? 'animate-spin' : ''}`} />
+                                    </button>
+                                </div>
+                            </h3>
                             {clinicalData ? (
-                                <div className="grid grid-cols-2 gap-4 mt-2 text-sm text-gray-400">
-                                    <div>eGFR: <span className={`font-bold ${clinicalData.kft?.egfr < 60 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.kft?.egfr || 'N/A'} ml/min</span></div>
-                                    <div>ALT: <span className={`font-bold ${clinicalData.lft?.alt > 40 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.lft?.alt || 'N/A'} U/L</span></div>
-                                    <div>HbA1c: <span className={`font-bold ${clinicalData.hba1c > 6.5 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.hba1c || 'N/A'} %</span></div>
-                                    <div>LDL: <span className={`font-bold ${clinicalData.lipid_profile?.ldl > 130 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.lipid_profile?.ldl || 'N/A'} mg/dL</span></div>
+                                <div className="space-y-4 mt-3">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-400">
+                                        <div>eGFR: <span className={`font-bold ${clinicalData.kft?.egfr < 60 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.kft?.egfr ?? 'N/A'}</span></div>
+                                        <div>ALT: <span className={`font-bold ${clinicalData.lft?.alt > 40 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.lft?.alt ?? 'N/A'}</span></div>
+                                        <div>HbA1c: <span className={`font-bold ${clinicalData.hba1c > 6.5 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.hba1c ?? 'N/A'}%</span></div>
+                                        <div>LDL: <span className={`font-bold ${clinicalData.lipid_profile?.ldl > 130 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.lipid_profile?.ldl ?? 'N/A'}</span></div>
+                                    </div>
+
+                                    <div className="pt-3 border-t border-gray-800 grid grid-cols-3 gap-4 text-xs text-gray-500">
+                                        <div>Creatinine: <span className="text-gray-300">{clinicalData.kft?.creatinine ?? 'N/A'}</span></div>
+                                        <div>Bilirubin: <span className="text-gray-300">{clinicalData.lft?.bilirubin ?? 'N/A'}</span></div>
+                                        <div>Triglycerides: <span className="text-gray-300">{clinicalData.lipid_profile?.triglycerides ?? 'N/A'}</span></div>
+                                    </div>
+
+                                    {/* Mental Health Section in Card */}
+                                    <div className="pt-3 border-t border-gray-800">
+                                        <h4 className="text-xs font-semibold text-purple-400 uppercase mb-2">Mental Health Assessment</h4>
+                                        <div className="grid grid-cols-3 gap-4 text-sm">
+                                            <div>GAD-7: <span className="text-gray-200 font-medium">{clinicalData.gad7_score ?? 'N/A'}</span></div>
+                                            <div>PHQ-9: <span className="text-gray-200 font-medium">{clinicalData.phq9_score ?? 'N/A'}</span></div>
+                                            <div>Stress: <span className="text-gray-200 font-medium">{clinicalData.stress_level ?? '0'}/10</span></div>
+                                        </div>
+                                    </div>
                                 </div>
                             ) : (
-                                <p className="text-sm text-gray-500 mt-2">No clinical data available. Enter values above.</p>
+                                <p className="text-sm text-gray-500 mt-2 italic">
+                                    {loadingClinical ? "Fetching records..." : "No clinical data available. Use the form above to enter data."}
+                                </p>
                             )}
                         </div>
 

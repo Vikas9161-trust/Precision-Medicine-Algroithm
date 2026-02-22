@@ -46,7 +46,7 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     response: str
-    variants_count: int
+    variants_count: Optional[int] = None
 
 class GeneProfile(BaseModel):
     gene: str

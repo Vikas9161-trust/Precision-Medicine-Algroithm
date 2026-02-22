@@ -1,18 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { api } from "@/services/api";
 import { Loader2, Save, BrainCircuit, UserCheck } from "lucide-react";
 
-export function MentalHealthForm({ onSave }: { onSave: () => void }) {
+export function MentalHealthForm({ onSave, initialData }: { onSave: () => void, initialData?: any }) {
     const [loading, setLoading] = useState(false);
 
     // Mental Health Scores
     const [gad7, setGad7] = useState("");
     const [phq9, setPhq9] = useState("");
     const [stress, setStress] = useState("");
+
+    // Effect to pre-fill form
+    useEffect(() => {
+        if (initialData) {
+            setGad7(initialData.gad7_score?.toString() || "");
+            setPhq9(initialData.phq9_score?.toString() || "");
+            setStress(initialData.stress_level?.toString() || "");
+        }
+    }, [initialData]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,13 +35,16 @@ export function MentalHealthForm({ onSave }: { onSave: () => void }) {
         // as the backend doesn't enforce non-null for others.
 
         const mentalHealthData = {
+            ...initialData,
             patient_id: "demo-patient-001",
             gad7_score: parseInt(gad7) || 0,
             phq9_score: parseInt(phq9) || 0,
             stress_level: parseInt(stress) || 0,
-            // Send empty/defaults for others to avoid validation error if any mandatory fields exist (none currently)
-            lft: {}, kft: {}, lipid_profile: {}
         };
+
+        // Remove ID to force a new record creation if backend expects it
+        delete (mentalHealthData as any).id;
+        delete (mentalHealthData as any).timestamp;
 
         try {
             await api.saveClinicalData(mentalHealthData);

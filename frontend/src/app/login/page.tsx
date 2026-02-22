@@ -5,15 +5,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Login:", email, password);
-        // Add actual login logic here later
+        setLoading(true);
+
+        // Simulate API delay
+        setTimeout(() => {
+            setLoading(false);
+            router.push("/patient-hub");
+        }, 1500);
     };
 
     return (
@@ -40,8 +49,9 @@ export default function LoginPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <Button type="submit" className="w-full">
-                            Login
+                        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
+                            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                            {loading ? "Logging in..." : "Login"}
                         </Button>
                     </form>
                 </CardContent>

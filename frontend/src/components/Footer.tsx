@@ -21,30 +21,30 @@ const Footer = () => {
                 <div>
                     <h3 className="font-bold mb-4 text-white">Product</h3>
                     <ul className="space-y-2 text-gray-400 text-sm">
-                        <li><Link href="#" className="hover:text-blue-400">Features</Link></li>
-                        <li><Link href="#" className="hover:text-blue-400">Integration</Link></li>
-                        <li><Link href="#" className="hover:text-blue-400">Pricing</Link></li>
-                        <li><Link href="#" className="hover:text-blue-400">FAQ</Link></li>
+                        <li><Link href="/product#features" className="hover:text-blue-400">Features</Link></li>
+                        <li><Link href="/product#integration" className="hover:text-blue-400">Integration</Link></li>
+                        <li><Link href="/product#pricing" className="hover:text-blue-400">Pricing</Link></li>
+                        <li><Link href="/product#faq" className="hover:text-blue-400">FAQ</Link></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 className="font-bold mb-4 text-white">Company</h3>
                     <ul className="space-y-2 text-gray-400 text-sm">
-                        <li><Link href="#" className="hover:text-blue-400">About Us</Link></li>
-                        <li><Link href="#" className="hover:text-blue-400">Careers</Link></li>
-                        <li><Link href="#" className="hover:text-blue-400">Blog</Link></li>
-                        <li><Link href="#" className="hover:text-blue-400">Contact</Link></li>
+                        <li><Link href="/company#about" className="hover:text-blue-400">About Us</Link></li>
+                        <li><Link href="/company#careers" className="hover:text-blue-400">Careers</Link></li>
+                        <li><Link href="/company#blog" className="hover:text-blue-400">Blog</Link></li>
+                        <li><Link href="/company#contact" className="hover:text-blue-400">Contact</Link></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 className="font-bold mb-4 text-white">Connect</h3>
                     <div className="flex space-x-4">
-                        <a href="#" className="text-gray-400 hover:text-white transition"><FaFacebook size={20} /></a>
-                        <a href="#" className="text-gray-400 hover:text-white transition"><FaTwitter size={20} /></a>
-                        <a href="#" className="text-gray-400 hover:text-white transition"><FaLinkedin size={20} /></a>
-                        <a href="#" className="text-gray-400 hover:text-white transition"><FaInstagram size={20} /></a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition"><FaFacebook size={20} /></a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition"><FaTwitter size={20} /></a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition"><FaLinkedin size={20} /></a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition"><FaInstagram size={20} /></a>
                     </div>
                 </div>
             </div>

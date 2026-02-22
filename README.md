@@ -22,6 +22,19 @@ PharmaGuard is a production-ready, scalable, AI-powered Clinical Decision Suppor
 - **Database**: MongoDB (Optional)
 - **AI**: OpenAI / Gemini API (LLM Integration)
 
+## Live Hosting (Vercel)
+
+PharmaGuard is optimized for seamless deployment on **Vercel**.
+
+### Quick Deploy
+1.  **Push to GitHub**: Push your local changes to a GitHub repository.
+2.  **Import to Vercel**: Connect your repository to Vercel.
+3.  **Environment Variables**: Add `GEMINI_API_KEY` to the Vercel project settings.
+4.  **Auto-Build**: Vercel will automatically detect the `vercel.json` configuration and build both the Next.js frontend and the FastAPI backend.
+
+> [!NOTE]
+> This project uses SQLite (`pharmaguard.db`) by default. On Vercel, the file system is ephemeral, meaning database changes will be reset after each server restart. For persistent data, consider connecting to a hosted database like Neon (PostgreSQL) or MongoDB.
+
 ## Getting Started
 
 ### Prerequisites
@@ -38,7 +51,10 @@ PharmaGuard is a production-ready, scalable, AI-powered Clinical Decision Suppor
     cd PharmaGuard
     ```
 
-2.  **Backend Setup:**
+2.  **Setup Environment:**
+    Copy `.env.example` to `.env` in the root, `backend/`, and `frontend/` directories and fill in your keys.
+
+3.  **Backend Setup:**
     ```bash
     cd backend
     python -m venv venv
@@ -47,7 +63,7 @@ PharmaGuard is a production-ready, scalable, AI-powered Clinical Decision Suppor
     uvicorn app.main:app --reload
     ```
 
-3.  **Frontend Setup:**
+4.  **Frontend Setup:**
     ```bash
     cd frontend
     npm install
@@ -56,7 +72,7 @@ PharmaGuard is a production-ready, scalable, AI-powered Clinical Decision Suppor
 
 ## API Documentation
 
-The backend API documentation is available at `http://localhost:8000/docs`.
+The backend API documentation is available at `http://localhost:8000/docs` (local) or your-vercel-url.app/api/docs (live).
 
 ## License
 

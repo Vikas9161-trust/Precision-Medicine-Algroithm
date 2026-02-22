@@ -19,53 +19,89 @@ export default function Home() {
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden">
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 px-6 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+      <section className="relative pt-12 pb-16 px-6 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
           <svg className="absolute w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <path d="M0,50 Q25,25 50,50 T100,50" stroke="#3b82f6" strokeWidth="0.5" fill="none" />
             <path d="M0,50 Q25,75 50,50 T100,50" stroke="#3b82f6" strokeWidth="0.5" fill="none" />
           </svg>
         </div>
 
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight leading-110%"
-          >
-            AI Powered Precision Medicine Algorithm <br />
-            <span className="text-gray-400">From Genetic Variants to Safer Prescriptions</span>
-          </motion.h1>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+          <div className="text-left">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight"
+            >
+              AI Powered Precision <br />
+              <span className="text-blue-500">Medicine Algorithm</span>
+            </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-lg text-gray-400 max-w-2xl mx-auto mb-10"
-          >
-            PharmaGuard analyses genomic VCF files to predict personalized drug risks based on clinical guidelines and explainable AI.
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-lg text-gray-400 max-w-xl mb-8"
+            >
+              From Genetic Variants to Safer Prescriptions. PharmaGuard analyses genomic VCF files to predict personalized drug risks based on clinical guidelines.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex flex-wrap gap-4"
+            >
+              <Link href="/upload">
+                <button className="px-6 py-3 bg-[#10b981] text-white font-semibold rounded-md shadow-lg hover:bg-[#059669] transition flex items-center gap-2">
+                  Analyze VCF File
+                </button>
+              </Link>
+              <Link href="/patient-hub">
+                <button className="px-6 py-3 bg-transparent text-blue-500 border border-blue-500/30 font-semibold rounded-md hover:bg-blue-500/10 transition flex items-center gap-2">
+                  <FaPlay size={12} /> View Demo
+                </button>
+              </Link>
+            </motion.div>
+          </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex justify-center gap-4"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="hidden lg:block"
           >
-            <Link href="/upload">
-              <button className="px-8 py-3 bg-[#10b981] text-white font-semibold rounded-md shadow-lg hover:bg-[#059669] transition flex items-center gap-2">
-                Analyze VCF File
-              </button>
-            </Link>
-            <button className="px-8 py-3 bg-transparent text-blue-600 border border-blue-200 font-semibold rounded-md hover:bg-blue-50 transition flex items-center gap-2">
-              <FaPlay size={12} /> View Demo
-            </button>
+            <div className="bg-[#1e293b] rounded-2xl p-6 shadow-2xl relative overflow-hidden border border-gray-700 max-w-md ml-auto">
+              <div className="flex gap-2 mb-4 opacity-50">
+                <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+              </div>
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-5">
+                <div className="inline-block px-2 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full mb-2">High Risk</div>
+                <h3 className="text-xl font-bold text-red-500">CYP2D6 Variant</h3>
+                <p className="text-red-400 text-xs mt-1">Poor Metabolizer Phenotype</p>
+                <div className="mt-4 pt-4 border-t border-red-500/10 text-[10px] text-red-300">
+                  Recommendation: Avoid Codeine.
+                </div>
+              </div>
+              <div className="mt-4 bg-gray-900/40 rounded-lg p-3 border border-gray-800">
+                <div className="flex justify-between items-center text-[10px] text-gray-500 mb-1">
+                  <span>AI Confidence Score</span>
+                  <span>99.2%</span>
+                </div>
+                <div className="w-full bg-gray-800 h-1 rounded-full">
+                  <div className="bg-blue-500 h-full w-[99%] rounded-full"></div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-16 px-6 max-w-7xl mx-auto">
+      <section id="how-it-works" className="py-16 px-6 max-w-7xl mx-auto">
         <h2 className="text-2xl font-bold text-white mb-8">How It Works</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <WorkflowCard
@@ -103,50 +139,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Live Preview & Key Features Split */}
-      <section className="py-16 px-6 max-w-7xl mx-auto items-start">
-        {/* Live Result Preview Mockup */}
-        <div>
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold text-white">Live Result Preview</h2>
-          </div>
-
-          <div className="bg-[#1e293b] rounded-2xl p-6 shadow-2xl relative overflow-hidden border border-gray-700">
-            {/* Window Controls */}
-            <div className="flex gap-2 mb-6 opacity-50">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6">
-              {/* Risk Alert */}
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 flex flex-col justify-between">
-                <div>
-                  <div className="inline-block px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full mb-3">High Risk</div>
-                  <h3 className="text-2xl font-bold text-red-500">CYP2D6</h3>
-                  <p className="text-red-400 text-sm mt-1">Poor Metabolizer</p>
-                </div>
-                <div className="mt-8">
-                  <div className="text-xs text-red-300">Confidence: 99%</div>
-                </div>
-              </div>
 
 
-
-
-            </div>
-          </div>
-
-
-
-
-
-        </div>
-
-
-        {/* Key Features */}
-        <div className="col-span-1 lg:col-span-2">
+      {/* Key Features */}
+      <section className="py-16 px-6 max-w-7xl mx-auto">
+        <div id="features" className="col-span-1 lg:col-span-2">
           <div className="mb-8 text-center lg:text-left">
             <h2 className="text-3xl font-bold text-white">Platform Capabilities</h2>
             <p className="text-gray-400 mt-2">Comprehensive tools for precision medicine.</p>
@@ -188,7 +185,7 @@ export default function Home() {
       </section>
 
       {/* Supported Genomic Targets */}
-      <section className="py-16 px-6 bg-[#0a0a0a]">
+      <section id="targets" className="py-16 px-6 bg-[#0a0a0a]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white">Supported Genomic Targets</h2>
@@ -221,12 +218,16 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-3 bg-[#3b82f6] text-white font-bold rounded-md hover:bg-blue-700 transition shadow-sm">
-                Login
-              </button>
-              <button className="px-8 py-3 bg-[#10b981] text-white font-bold rounded-md hover:bg-green-600 transition shadow-sm">
-                Signup
-              </button>
+              <Link href="/login">
+                <button className="px-8 py-3 bg-[#3b82f6] text-white font-bold rounded-md hover:bg-blue-700 transition shadow-sm w-full sm:w-auto">
+                  Login
+                </button>
+              </Link>
+              <Link href="/signup">
+                <button className="px-8 py-3 bg-[#10b981] text-white font-bold rounded-md hover:bg-green-600 transition shadow-sm w-full sm:w-auto">
+                  Signup
+                </button>
+              </Link>
             </div>
             <p className="mt-4 text-xs text-gray-400">Encrypted Processing</p>
           </div>
