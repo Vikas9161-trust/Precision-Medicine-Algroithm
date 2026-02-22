@@ -1,0 +1,11 @@
+psycopg2-binary
+fastapi
+uvicorn
+pydantic
+python-multipart
+requests
+pytest
+httpx
+sqlmodel
+google-generativeai
+python-dotenv

@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useState, useMemo } from "react"
-import type { AnalysisRecord } from "@/lib/api"
-import { getHistory } from "@/lib/api"
+import { api, type AnalysisRecord } from "@/services/api"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Loader2, Download, Search, FileJson } from "lucide-react"
@@ -251,7 +250,7 @@ export default function HistoryPage() {
     ]
 
     useEffect(() => {
-        getHistory()
+        api.getHistory()
             .then(data => {
                 // Combine real data with sample data for demo purposes
                 // Or just use sample data if real data is empty

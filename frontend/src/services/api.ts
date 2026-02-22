@@ -1,4 +1,8 @@
-const API_BASE_URL = 'http://localhost:8000';
+// Use current origin if in browser, otherwise fallback to localhost for local dev
+const isBrowser = typeof window !== 'undefined';
+const API_BASE_URL = isBrowser
+    ? (window.location.origin.includes('localhost') ? 'http://localhost:8000' : '/api')
+    : 'http://localhost:8000';
 
 export interface AnalysisResult {
     patient_id: string;
