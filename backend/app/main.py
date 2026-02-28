@@ -152,6 +152,18 @@ async def chat_endpoint(request: ChatRequest):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/scan-pill")
+async def scan_pill(file: UploadFile = File(...)):
+    try:
+        content = await file.read()
+        mime_type = file.content_type or "image/jpeg"
+        results = llm_service.analyze_pill_image(content, mime_type)
+        return {"drugs": results}
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Clinical Data Endpoints
 from app.models.clinical_models import ClinicalRecord
 

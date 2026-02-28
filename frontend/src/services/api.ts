@@ -1,8 +1,10 @@
 // Use current origin if in browser, otherwise fallback to localhost for local dev
 const isBrowser = typeof window !== 'undefined';
 const API_BASE_URL = isBrowser
-    ? (window.location.origin.includes('localhost') ? 'https://precision-medicine-algorithm.vercel.app/api' : '/api')
-    : 'https://precision-medicine-algorithm.vercel.app/api';
+    ? (window.location.hostname === 'precision-medicine-algorithm.vercel.app'
+        ? 'https://precision-medicine-algorithm.vercel.app/api'
+        : `http://${window.location.hostname}:8000`)
+    : 'http://localhost:8000';
 
 export interface AnalysisResult {
     patient_id: string;
@@ -188,6 +190,24 @@ export const api = {
     getAppointments: async (): Promise<any[]> => {
         const response = await fetch(`${API_BASE_URL}/api/appointments`);
         if (!response.ok) throw new Error("Failed to fetch appointments");
+        return await response.json();
+    },
+
+    // Scan Pill Image
+    scanPill: async (file: File | Blob): Promise<{ drugs: any[] }> => {
+        const formData = new FormData();
+        formData.append('file', file, 'pill_image.jpg');
+
+        const response = await fetch(`${API_BASE_URL}/scan-pill`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.detail || `API Error: ${response.statusText}`);
+        }
+
         return await response.json();
     }
 };

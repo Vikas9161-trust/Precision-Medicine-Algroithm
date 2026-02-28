@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { AlertTriangle, Bell, Building2, CheckCircle2, Map, ShieldAlert, Activity } from 'lucide-react';
+import { AlertTriangle, Bell, Building2, CheckCircle2, Map, ShieldAlert, Activity, Scan } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import DnaModel from "@/components/DnaModel";
+import PillScanner from "@/components/PillScanner";
 
 export default function ClinicalAction() {
     // Simulated Zone State
@@ -59,7 +60,10 @@ export default function ClinicalAction() {
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-white tracking-tight">Clinical Action & Economics</h1>
+                        <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                            <Scan className="h-8 w-8 text-indigo-400" />
+                            Clinical Action & Economics
+                        </h1>
                         <p className="text-gray-400 mt-1">Test recommendations, economic impact, and regulatory compliance.</p>
                     </div>
                     <Button
@@ -151,8 +155,13 @@ export default function ClinicalAction() {
                     </CardContent>
                 </Card>
 
+                {/* Simulated Pill Scanner */}
+                <div className="mt-8">
+                    <PillScanner />
+                </div>
+
                 {/* Original Content: Recommendations & Economics */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                     {/* Testing Recommendations */}
                     <div className="bg-[#1e293b] p-6 rounded-xl shadow-sm border border-gray-800">
                         <h2 className="text-xl font-bold text-blue-400 mb-4 border-b border-gray-700 pb-2 flex items-center gap-2">

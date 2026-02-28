@@ -148,3 +148,100 @@ class LLMService:
                 return "PharmaGuard AI service is temporarily overloaded. Please try again in a few moments."
         else:
             return "AI service is currently unavailable. Please check your GEMINI_API_KEY configuration."
+
+    def analyze_pill_image(self, image_data: bytes, mime_type: str = "image/jpeg") -> list[dict]:
+        """
+        Analyzes a pill image using Gemini Vision to extract drug names and assess risk.
+        """
+        if not self.model:
+            logger.error("Model not initialized. Cannot analyze image.")
+            return [{
+                "id": 888,
+                "name": "Model Not Initialized",
+                "status": "Check API Key",
+                "color": "bg-gray-500",
+                "textColor": "text-gray-700",
+                "bgLight": "bg-gray-50"
+            }]
+
+        try:
+            prompt = """
+            You are a pharmaceutical clinical AI assistant. Analyze this image of a medication or pill bottle.
+            Identify any drugs present based on the packaging text (OCR) or pill characteristics.
+            
+            Return a JSON array of identified drugs with these EXACT keys for each drug:
+            - id: a unique integer ID
+            - name: the identified drug name (e.g., "Atorvastatin (Lipitor)")
+            - status: a short status string based on general knowledge (e.g., "Safe — No risk detected", "Adjust Dosage — Caution", "Toxic — Dangerous")
+            - color: a tailwind background color class corresponding to the status (e.g., "bg-green-500", "bg-yellow-500", "bg-red-500")
+            - textColor: a tailwind text color class for the badge (e.g., "text-green-700", "text-yellow-700", "text-red-700")
+            - bgLight: a tailwind background color class for the badge (e.g., "bg-green-50", "bg-yellow-50", "bg-red-50")
+            
+            Return ONLY the valid JSON array without any markdown formatting.
+            """
+            
+            image_part = {
+                "mime_type": mime_type,
+                "data": image_data
+            }
+            
+            print("Sending request to Gemini...")
+            response = self.model.generate_content([prompt, image_part])
+            text = response.text.strip()
+            print("=== GEMINI RAW RESPONSE ===")
+            print(text)
+            print("===========================")
+            
+            if not text:
+               return [{
+                    "id": 777,
+                    "name": "Empty Response",
+                    "status": "AI Found Nothing",
+                    "color": "bg-gray-500",
+                    "textColor": "text-gray-700",
+                    "bgLight": "bg-gray-50"
+                }]
+            
+            if text.startswith("```json"):
+                text = text[7:]
+            if text.endswith("```"):
+                text = text[:-3]
+            
+            text = text.strip()
+                
+            data = json.loads(text)
+            print("Parsed JSON data:", type(data), data)
+            if isinstance(data, list):
+                return data
+            # If it returned a dict with a key that contains the list
+            if isinstance(data, dict):
+                for key, value in data.items():
+                    if isinstance(value, list):
+                        return value
+            return []
+            
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            error_msg = str(e).lower()
+            logger.error(f"Error analyzing pill image: {e}")
+            
+            # If the user hit the Gemini free-tier quota, display a fake "drug" warning on the frontend.
+            if "429" in error_msg or "quota" in error_msg or "exhausted" in error_msg:
+                return [{
+                    "id": 999,
+                    "name": "API Quota Exceeded",
+                    "status": "Service Unavailable",
+                    "color": "bg-orange-500",
+                    "textColor": "text-orange-700",
+                    "bgLight": "bg-orange-50"
+                }]
+                
+            return [{
+                "id": 500,
+                "name": "Server Error",
+                "status": str(e)[:30],
+                "color": "bg-red-500",
+                "textColor": "text-red-700",
+                "bgLight": "bg-red-50"
+            }]

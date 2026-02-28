@@ -7,7 +7,8 @@ import {
     Calendar,
     Stethoscope,
     ClipboardList,
-    LayoutDashboard
+    LayoutDashboard,
+    Scan
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -50,6 +51,10 @@ const Navbar = () => {
                         <Link href="/clinical-action" className="text-gray-400 hover:text-purple-400 font-semibold text-[10px] uppercase tracking-wider transition-all flex items-center gap-2 py-1.5 px-3 border border-gray-800/50 rounded-full hover:bg-purple-500/5 hover:border-purple-500/30 group">
                             <ClipboardList className="w-3.5 h-3.5 text-gray-500 group-hover:text-purple-400 transition-colors" />
                             Clinical Action
+                        </Link>
+                        <Link href="/pill-scanner" className="text-indigo-400 font-semibold text-[10px] uppercase tracking-wider transition-all flex items-center gap-2 py-1.5 px-3 border border-indigo-500/50 bg-indigo-500/10 rounded-full hover:bg-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.2)] group">
+                            <Scan className="w-3.5 h-3.5 text-indigo-400 group-hover:scale-110 transition-transform" />
+                            Scan Pill
                         </Link>
                     </div>
 
