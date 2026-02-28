@@ -73,16 +73,24 @@ export default function PatientDataHub() {
     };
 
     return (
-        <div className="p-8 space-y-8 bg-[#0a0a0a] min-h-screen">
-            <h1 className="text-3xl font-bold text-white">Patient Data Hub</h1>
-            <p className="text-gray-400">Centralized view of patient genomic and clinical profiles.</p>
-
-            {/* Lab Input Section */}
-            <div className="mb-8">
-                <LabInputForm onSave={fetchClinicalData} initialData={clinicalData} />
+        <div className="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+                <img
+                    src="https://images.unsplash.com/photo-1583947215259-38e31be8751f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+                    alt="Pharmacy Background"
+                    className="w-full h-full object-cover blur-[2px]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/90 via-[#0a0a0a]/60 to-[#0a0a0a]/90"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="relative z-10 p-8 space-y-8">
+                <h1 className="text-3xl font-bold text-white">Patient Data Hub</h1>
+                <p className="text-gray-400">Centralized view of patient genomic and clinical profiles.</p>
+
+                {/* Lab Input Section */}
+                <div className="mb-8">
+                    <LabInputForm onSave={fetchClinicalData} initialData={clinicalData} />
+                </div>
                 {/* Genomic Profile Card */}
                 <div className="bg-[#1e293b] p-6 rounded-xl shadow-sm border border-gray-800">
                     <h2 className="text-xl font-semibold mb-4 text-blue-400">Genomic Profile (VCF Analysis)</h2>
@@ -149,75 +157,67 @@ export default function PatientDataHub() {
                             </table>
                         </div>
                     </div>
-                </div>
 
-                {/* Clinical Profile Card */}
-                <div className="bg-[#1e293b] p-6 rounded-xl shadow-sm border border-gray-800">
-                    <h2 className="text-xl font-semibold mb-4 text-green-400">Clinical Profile</h2>
+                    {/* Clinical Profile Card */}
+                    <div className="bg-[#1e293b] p-6 rounded-xl shadow-sm border border-gray-800">
+                        <h2 className="text-xl font-semibold mb-4 text-green-400">Clinical Profile</h2>
 
-                    <div className="space-y-4">
-                        <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                            <h3 className="font-medium text-gray-200">Demographics</h3>
-                            <div className="grid grid-cols-2 gap-4 mt-2 text-sm text-gray-400">
-                                <div>Age: <span className="text-gray-200">45</span></div>
-                                <div>Sex: <span className="text-gray-200">Male</span></div>
-                                <div>Weight: <span className="text-gray-200">78 kg</span></div>
-                                <div>Ethnicity: <span className="text-gray-200">Caucasian</span></div>
-                            </div>
-                        </div>
-
-                        <div className="bg-green-900/10 p-4 rounded-lg border border-green-900/20">
-                            <h3 className="font-medium text-green-400 flex justify-between items-center">
-                                <span>Laboratory Data (Latest)</span>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={fetchClinicalData}
-                                        disabled={loadingClinical}
-                                        className="p-1 hover:bg-green-900/30 rounded-full transition-colors"
-                                        title="Refresh Data"
-                                    >
-                                        <RefreshCw className={`h-4 w-4 ${loadingClinical ? 'animate-spin' : ''}`} />
-                                    </button>
+                        <div className="space-y-4">
+                            <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                                <h3 className="font-medium text-gray-200">Demographics</h3>
+                                <div className="grid grid-cols-2 gap-4 mt-2 text-sm text-gray-400">
+                                    <div>Age: <span className="text-gray-200">N/A</span></div>
+                                    <div>Sex: <span className="text-gray-200">N/A</span></div>
+                                    <div>Weight: <span className="text-gray-200">N/A</span></div>
+                                    <div>Ethnicity: <span className="text-gray-200">N/A</span></div>
                                 </div>
-                            </h3>
-                            {clinicalData ? (
+                            </div>
+
+                            <div className="bg-green-900/10 p-4 rounded-lg border border-green-900/20">
+                                <h3 className="font-medium text-green-400 flex justify-between items-center">
+                                    <span>Laboratory Data (Latest)</span>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            disabled={true}
+                                            className="p-1 hover:bg-green-900/30 rounded-full transition-colors opacity-50 cursor-not-allowed"
+                                            title="Refresh Data"
+                                        >
+                                            <RefreshCw className="h-4 w-4" />
+                                        </button>
+                                    </div>
+                                </h3>
                                 <div className="space-y-4 mt-3">
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-400">
-                                        <div>eGFR: <span className={`font-bold ${clinicalData.kft?.egfr < 60 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.kft?.egfr ?? 'N/A'}</span></div>
-                                        <div>ALT: <span className={`font-bold ${clinicalData.lft?.alt > 40 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.lft?.alt ?? 'N/A'}</span></div>
-                                        <div>HbA1c: <span className={`font-bold ${clinicalData.hba1c > 6.5 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.hba1c ?? 'N/A'}%</span></div>
-                                        <div>LDL: <span className={`font-bold ${clinicalData.lipid_profile?.ldl > 130 ? 'text-red-400' : 'text-gray-200'}`}>{clinicalData.lipid_profile?.ldl ?? 'N/A'}</span></div>
+                                        <div>eGFR: <span className="font-bold text-gray-200">N/A</span></div>
+                                        <div>ALT: <span className="font-bold text-gray-200">N/A</span></div>
+                                        <div>HbA1c: <span className="font-bold text-gray-200">N/A</span></div>
+                                        <div>LDL: <span className="font-bold text-gray-200">N/A</span></div>
                                     </div>
 
                                     <div className="pt-3 border-t border-gray-800 grid grid-cols-3 gap-4 text-xs text-gray-500">
-                                        <div>Creatinine: <span className="text-gray-300">{clinicalData.kft?.creatinine ?? 'N/A'}</span></div>
-                                        <div>Bilirubin: <span className="text-gray-300">{clinicalData.lft?.bilirubin ?? 'N/A'}</span></div>
-                                        <div>Triglycerides: <span className="text-gray-300">{clinicalData.lipid_profile?.triglycerides ?? 'N/A'}</span></div>
+                                        <div>Creatinine: <span className="text-gray-300">N/A</span></div>
+                                        <div>Bilirubin: <span className="text-gray-300">N/A</span></div>
+                                        <div>Triglycerides: <span className="text-gray-300">N/A</span></div>
                                     </div>
 
                                     {/* Mental Health Section in Card */}
                                     <div className="pt-3 border-t border-gray-800">
                                         <h4 className="text-xs font-semibold text-purple-400 uppercase mb-2">Mental Health Assessment</h4>
                                         <div className="grid grid-cols-3 gap-4 text-sm">
-                                            <div>GAD-7: <span className="text-gray-200 font-medium">{clinicalData.gad7_score ?? 'N/A'}</span></div>
-                                            <div>PHQ-9: <span className="text-gray-200 font-medium">{clinicalData.phq9_score ?? 'N/A'}</span></div>
-                                            <div>Stress: <span className="text-gray-200 font-medium">{clinicalData.stress_level ?? '0'}/10</span></div>
+                                            <div>GAD-7: <span className="text-gray-200 font-medium">N/A</span></div>
+                                            <div>PHQ-9: <span className="text-gray-200 font-medium">N/A</span></div>
+                                            <div>Stress: <span className="text-gray-200 font-medium">N/A</span></div>
                                         </div>
                                     </div>
                                 </div>
-                            ) : (
-                                <p className="text-sm text-gray-500 mt-2 italic">
-                                    {loadingClinical ? "Fetching records..." : "No clinical data available. Use the form above to enter data."}
-                                </p>
-                            )}
-                        </div>
+                            </div>
 
-                        <div className="bg-blue-900/10 p-4 rounded-lg border border-blue-900/20">
-                            <h3 className="font-medium text-blue-400">Medication History</h3>
-                            <ul className="list-disc pl-5 mt-2 text-sm text-gray-400">
-                                <li>Lisinopril 10mg</li>
-                                <li>Atorvastatin 20mg</li>
-                            </ul>
+                            <div className="bg-blue-900/10 p-4 rounded-lg border border-blue-900/20">
+                                <h3 className="font-medium text-blue-400">Medication History</h3>
+                                <ul className="list-disc pl-5 mt-2 text-sm text-gray-400">
+                                    <li>N/A</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

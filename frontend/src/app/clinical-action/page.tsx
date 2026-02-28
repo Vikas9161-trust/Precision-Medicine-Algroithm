@@ -5,6 +5,7 @@ import { AlertTriangle, Bell, Building2, CheckCircle2, Map, ShieldAlert, Activit
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import DnaModel from "@/components/DnaModel";
 
 export default function ClinicalAction() {
     // Simulated Zone State
@@ -53,7 +54,7 @@ export default function ClinicalAction() {
     };
 
     return (
-        <div className="p-4 md:p-8 space-y-8 bg-[#0a0a0a] min-h-screen font-sans">
+        <div className="p-4 md:p-8 space-y-8 min-h-screen font-sans">
             <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700">
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -70,6 +71,19 @@ export default function ClinicalAction() {
                         {simulating ? <Activity className="mr-2 h-4 w-4 animate-spin" /> : <AlertTriangle className="mr-2 h-4 w-4" />}
                         Simulate Outbreak
                     </Button>
+                </div>
+
+                {/* 3D DNA Visualization Hero Section */}
+                <div className="w-full bg-gradient-to-br from-slate-900 via-black to-slate-900 rounded-xl border border-indigo-500/20 shadow-2xl overflow-hidden relative">
+                    <div className="absolute top-4 left-6 z-10 pointer-events-none">
+                        <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-500 flex items-center gap-2">
+                            Interactive Genetic Engine
+                        </h2>
+                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest font-mono">Live 3D Visualization</p>
+                    </div>
+                    <div className="h-[400px] w-full">
+                        <DnaModel />
+                    </div>
                 </div>
 
                 {/* Regulatory Reporting Section (NEW) */}

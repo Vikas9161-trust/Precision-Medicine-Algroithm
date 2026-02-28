@@ -31,7 +31,7 @@ const FEATURED_DOCTORS = [
 
 export default function AppointmentsPage() {
     return (
-        <div className="min-h-screen bg-[#0a0a0a] p-4 md:p-8 font-sans">
+        <div className="min-h-screen p-4 md:p-8 font-sans">
             <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-700">
 
                 {/* Header */}

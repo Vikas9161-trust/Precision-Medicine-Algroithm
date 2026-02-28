@@ -29,10 +29,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen relative`}
       >
+        {/* Global Pharmacy Background */}
+        <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+          <img
+            src="https://www.shutterstock.com/shutterstock/videos/1060009559/thumb/1.jpg?ip=x480"
+            alt="Global Pharmacy Background"
+            className="w-full h-full object-cover blur-[1px] opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#0a0a0a]/60 to-[#0a0a0a]"></div>
+        </div>
+
         <Navbar />
-        {children}
+        <main className="relative z-10">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

@@ -75,13 +75,13 @@ def seed_data():
         session.commit()
         print("Seeding Complete.")
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    create_db_and_tables()
-    seed_data()
-    yield
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     create_db_and_tables()
+#     seed_data()
+#     yield
 
-app = FastAPI(title="PharmaGuard API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="PharmaGuard API", version="1.0.0")
 
 # CORS Setup
 app.add_middleware(
@@ -193,6 +193,12 @@ def book_appointment(appointment: Appointment, session: Session = Depends(get_se
 @app.get("/api/appointments", response_model=List[Appointment])
 def get_appointments(session: Session = Depends(get_session)):
     return session.exec(select(Appointment).order_by(Appointment.created_at.desc())).all()
+
+create_db_and_tables()
+try:
+    seed_data()
+except Exception as e:
+    print("Seed data failed:", e)
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

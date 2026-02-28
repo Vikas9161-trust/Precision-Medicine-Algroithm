@@ -25,7 +25,7 @@ try:
     # Try to import from backend.app.main (which requires root_dir in sys.path)
     # or from app.main (which requires backend_dir in sys.path)
     from backend.app.main import app as main_app
-    app = main_app
+    app.mount("/api", main_app)
 except Exception as e:
     import traceback
     error_info = {"error": str(e), "traceback": traceback.format_exc()}

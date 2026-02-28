@@ -39,7 +39,7 @@ export default function DoctorDashboard() {
     const clinicVisits = filteredAppointments.filter(a => a.consultation_type === "In-person").length
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] p-8 font-sans">
+        <div className="min-h-screen p-8 font-sans">
             <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

@@ -16,16 +16,10 @@ const mockData = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden">
+    <div className="min-h-screen text-white overflow-hidden">
 
       {/* Hero Section */}
       <section className="relative pt-12 pb-16 px-6 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-          <svg className="absolute w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M0,50 Q25,25 50,50 T100,50" stroke="#3b82f6" strokeWidth="0.5" fill="none" />
-            <path d="M0,50 Q25,75 50,50 T100,50" stroke="#3b82f6" strokeWidth="0.5" fill="none" />
-          </svg>
-        </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
           <div className="text-left">
@@ -185,7 +179,7 @@ export default function Home() {
       </section>
 
       {/* Supported Genomic Targets */}
-      <section id="targets" className="py-16 px-6 bg-[#0a0a0a]">
+      <section id="targets" className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white">Supported Genomic Targets</h2>
@@ -209,7 +203,7 @@ export default function Home() {
       <ChatBot />
 
       {/* Security Section */}
-      <section className="py-16 bg-[#0a0a0a] border-t border-gray-800">
+      <section className="py-16 border-t border-gray-800">
         <div className="max-w-3xl mx-auto text-center">
           <div className="bg-blue-900/10 rounded-2xl p-10 border border-blue-900/20 inline-block w-full">
             <h2 className="text-2xl font-bold text-white mb-2">Secure & Private Processing</h2>

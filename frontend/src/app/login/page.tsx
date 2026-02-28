@@ -26,7 +26,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-[#0a0a0a] font-sans">
+        <div className="flex justify-center items-center min-h-screen font-sans">
             <Card className="w-96 shadow-lg animate-in fade-in zoom-in-95 duration-500 bg-[#1e293b] border-gray-800 text-white">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold text-center text-white">Login</CardTitle>

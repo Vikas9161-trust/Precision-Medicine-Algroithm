@@ -105,7 +105,7 @@ export default function DrugRiskIntelligence() {
     };
 
     return (
-        <div className="p-8 space-y-12 bg-[#0a0a0a] min-h-screen font-sans">
+        <div className="p-8 space-y-12 min-h-screen font-sans">
             <div className="space-y-4">
                 <h1 className="text-4xl font-bold text-white tracking-tight">Drug Risk Intelligence</h1>
                 <p className="text-gray-400 text-lg max-w-2xl">
