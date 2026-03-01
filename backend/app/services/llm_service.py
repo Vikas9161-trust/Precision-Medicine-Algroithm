@@ -165,19 +165,27 @@ class LLMService:
             }]
 
         try:
+            # Save the image for debugging purposes
+            import os
+            try:
+                with open("temp_pill_scan.jpg", "wb") as f:
+                    f.write(image_data)
+                logger.info("Saved debug image to temp_pill_scan.jpg")
+            except Exception as img_err:
+                logger.error(f"Failed to save debug image: {img_err}")
+
             prompt = """
-            You are a pharmaceutical clinical AI assistant. Analyze this image of a medication or pill bottle.
-            Identify any drugs present based on the packaging text (OCR) or pill characteristics.
+            Identify the names of any medications or drugs visible in this image.
             
-            Return a JSON array of identified drugs with these EXACT keys for each drug:
+            Return a JSON array of identified drugs with these EXACT keys:
             - id: a unique integer ID
-            - name: the identified drug name (e.g., "Atorvastatin (Lipitor)")
-            - status: a short status string based on general knowledge (e.g., "Safe — No risk detected", "Adjust Dosage — Caution", "Toxic — Dangerous")
-            - color: a tailwind background color class corresponding to the status (e.g., "bg-green-500", "bg-yellow-500", "bg-red-500")
-            - textColor: a tailwind text color class for the badge (e.g., "text-green-700", "text-yellow-700", "text-red-700")
-            - bgLight: a tailwind background color class for the badge (e.g., "bg-green-50", "bg-yellow-50", "bg-red-50")
+            - name: the identified drug name (e.g., "Atorvastatin")
+            - status: "Safe — General Use" (default)
+            - color: "bg-green-500"
+            - textColor: "text-green-700"
+            - bgLight: "bg-green-50"
             
-            Return ONLY the valid JSON array without any markdown formatting.
+            Return ONLY the valid JSON array [ {"name": "..."} ]. If nothing found, return [].
             """
             
             image_part = {
@@ -185,12 +193,10 @@ class LLMService:
                 "data": image_data
             }
             
-            print("Sending request to Gemini...")
+            logger.info("Sending request to Gemini Vision...")
             response = self.model.generate_content([prompt, image_part])
             text = response.text.strip()
-            print("=== GEMINI RAW RESPONSE ===")
-            print(text)
-            print("===========================")
+            logger.info(f"=== GEMINI RAW RESPONSE ===\n{text}\n===========================")
             
             if not text:
                return [{
@@ -202,23 +208,39 @@ class LLMService:
                     "bgLight": "bg-gray-50"
                 }]
             
-            if text.startswith("```json"):
-                text = text[7:]
-            if text.endswith("```"):
-                text = text[:-3]
-            
-            text = text.strip()
+            # Extract JSON from potential markdown blocks or extra text
+            import re
+            json_match = re.search(r'\[\s*{.*}\s*\]', text, re.DOTALL)
+            if json_match:
+                text = json_match.group(0)
+            else:
+                # Fallback to current stripping logic if regex fails but might still be valid
+                if text.startswith("```json"):
+                    text = text[7:]
+                if text.endswith("```"):
+                    text = text[:-3]
+                text = text.strip()
                 
-            data = json.loads(text)
-            print("Parsed JSON data:", type(data), data)
-            if isinstance(data, list):
-                return data
-            # If it returned a dict with a key that contains the list
-            if isinstance(data, dict):
-                for key, value in data.items():
-                    if isinstance(value, list):
-                        return value
-            return []
+            try:
+                data = json.loads(text)
+                logger.info(f"Parsed JSON data successfully: {len(data) if isinstance(data, list) else 1} items")
+                if isinstance(data, list):
+                    return data
+                if isinstance(data, dict):
+                    for key, value in data.items():
+                        if isinstance(value, list):
+                            return value
+                return []
+            except json.JSONDecodeError as je:
+                logger.error(f"JSON Decode Error: {je}")
+                return [{
+                    "id": 501,
+                    "name": "Parse Error",
+                    "status": "Invalid AI Format",
+                    "color": "bg-yellow-500",
+                    "textColor": "text-yellow-700",
+                    "bgLight": "bg-yellow-50"
+                }]
             
         except Exception as e:
             import traceback
